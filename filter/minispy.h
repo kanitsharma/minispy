@@ -93,6 +93,8 @@ typedef struct _RECORD_DATA {
 	ULONG EventType;
     ULONG Flags;
 
+    UNICODE_STRING Account;
+
     FILE_ID ProcessId;
 } RECORD_DATA, *PRECORD_DATA;
 

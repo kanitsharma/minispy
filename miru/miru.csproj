@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CenterDevice.MiniFSWatcher</RootNamespace>
-    <AssemblyName>MiniFSWatcher</AssemblyName>
+    <AssemblyName>miru</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

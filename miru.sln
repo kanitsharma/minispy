@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Filter", "Filter", "{FE7898
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{94944192-75BD-4A9E-B4DB-811E26C3A6E5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MiniFSWatcherDriver", "MiniFSWatcherDriver\minispy.vcxproj", "{AB0153F1-D5E4-45E0-9308-5EF32974E9A1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filter", "MiniFSWatcherDriver\filter.vcxproj", "{AB0153F1-D5E4-45E0-9308-5EF32974E9A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miru", "miru\miru.csproj", "{01BFC4EE-8FD7-44CE-A00E-DA542116F27D}"
 EndProject

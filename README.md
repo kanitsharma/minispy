@@ -1,48 +1,4 @@
-# MiniFSWatcher
-
-MiniFSWatcher is a file system event watcher for C# based on the [minispy](https://github.com/Microsoft/Windows-driver-samples/tree/master/filesys/miniFilter/minispy) driver example from Microsoft.
-Compared to the default `FileSystemWatcher` class, MiniFSWatcher provides the following benefits:
-
-### Capturing file moved events
-
-The default `FileSystemWatcher` has no notion of moved files, it'll only generate "created" and "deleted"
-events instead. `MiniFSWatcher` will let you track file movement within one partition.
-
-### Reducing the amount of changed events
-
-With the `AggregateEvents` option, you'll only receive one file event when the respective file handle is closed
-and thus no more consecutive changes will occure. If multiple write operations were performed, only one "changed"
-event is triggered. If a file is created _and_ changed (i.e. due to a copy operation), you'll only receive one 
-"created" event.
-
-### Getting information about the process causing the change
-
-Sometimes it is useful to know who caused the change, for example to ignore changes performed by a certain
-application. `MiniFSWatcher` provides the ID of the causing process with every event and further allows 
-to directly filter out all events caused by its own process ID.
-
-# Usage
-
-The following example shows how to use MiniFSWatcher to watch a directory and all subdirectories.
-
-    var eventWatcher = new EventWatcher();
-    
-    eventWatcher.OnRenameOrMove += (filename, oldFilename, process) =>
-    {
-      Console.WriteLine("File " + oldFilename + " has been moved to " + filename + " by process " + process );
-    };
-    
-    eventWatcher.Connect();
-    eventWatcher.WatchPath("C:\\Users\\MyUser\\*");
-
-# Installation
-
-MiniFSWatcher consists of a user mode C# library and a minifilter driver running in kernel mode.
-Both components need to be installed to observe file system events.
-
-## Installing the user mode library
-
-You can install the user mode library from [nuget](https://www.nuget.org/packages/MiniFSWatcher/) or simply add the `MiniFSWatcher` project to your project references.
+# Miru
 
 ## Installing the kernel mode driver
 

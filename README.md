@@ -1,4 +1,4 @@
-# Miru
+# Minispy
 
 ## Installing the kernel mode driver
 

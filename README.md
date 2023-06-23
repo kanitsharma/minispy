@@ -1,4 +1,4 @@
-# Minispy
+# Sniper
 
 ## Installing the kernel mode driver
 

@@ -18,7 +18,6 @@ Environment:
 #include <initguid.h>
 #include <stdio.h>
 
-
 #include "mspyKern.h"
 
 //
@@ -97,6 +96,7 @@ Return Value:
 
     return ( count );
 }
+
 
 //---------------------------------------------------------------------------
 //                    Log Record allocation routines
@@ -394,36 +394,33 @@ None.
 
 BOOLEAN SpyIsWatchedPath(_In_ PUNICODE_STRING path) 
 {
-    BOOLEAN result = FALSE;
-    for (int i = 0; i < MAX_WATCHERS; i++)
-    {
-        result = FsRtlIsNameInExpression(&MiniFSWatcherData.WatchPaths[i], path, TRUE, NULL);
-        if (result)
-        {
-            break;
-        }
-    }
-    return result;
+	BOOLEAN result = FALSE;
+	if (!InterlockedExchange(&MiniFSWatcherData.WatchPathInUse, TRUE)) 
+	{
+		result = FsRtlIsNameInExpression(&MiniFSWatcherData.WatchPath, path, TRUE, NULL);
+		MiniFSWatcherData.WatchPathInUse = FALSE;
+	}
+	return result;
 }
 
 BOOLEAN SpyUpdateWatchedPath(_In_ PUNICODE_STRING path)
 {
-    BOOLEAN result = FALSE;
-    if (MiniFSWatcherData.WatchPathInUse < MAX_WATCHERS) 
-    {
-        // if (MiniFSWatcherData.WatchPaths.Buffer != NULL) 
-        // {
-        //     RtlFreeUnicodeString(&MiniFSWatcherData.WatchPath);
-        // }
-        if (path != NULL && path->Buffer != NULL)
-        {
-            RtlUpcaseUnicodeString(&MiniFSWatcherData.WatchPaths[MiniFSWatcherData.WatchPathInUse], path, TRUE);
-        }
+	BOOLEAN result = FALSE;
+	if (!InterlockedExchange(&MiniFSWatcherData.WatchPathInUse, TRUE)) 
+	{
+		if (MiniFSWatcherData.WatchPath.Buffer != NULL) 
+		{
+			RtlFreeUnicodeString(&MiniFSWatcherData.WatchPath);
+		}
+		if (path != NULL && path->Buffer != NULL)
+		{
+			RtlUpcaseUnicodeString(&MiniFSWatcherData.WatchPath, path, TRUE);
+		}
 
-        result = TRUE;
-        MiniFSWatcherData.WatchPathInUse++;
-    }
-    return result;
+		result = TRUE;
+		MiniFSWatcherData.WatchPathInUse = FALSE;
+	}
+	return result;
 }
 
 ULONG SpyGetEventType(
@@ -513,6 +510,7 @@ Return Value:
 
 	recordData->Flags			= 0L;
     recordData->ProcessId       = (FILE_ID)PsGetCurrentProcessId();
+
     KeQuerySystemTime( &recordData->OriginatingTime );
 }
 

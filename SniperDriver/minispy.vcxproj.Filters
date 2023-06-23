@@ -46,7 +46,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="minifswatcher.inf">
+    <Inf Include="sniper.inf">
       <Filter>Driver Files</Filter>
     </Inf>
   </ItemGroup>

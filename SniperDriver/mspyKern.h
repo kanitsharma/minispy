@@ -42,7 +42,6 @@ Environment:
 //---------------------------------------------------------------------------
 //      Global variables
 //---------------------------------------------------------------------------
-#define MAX_WATCHERS 10
 
 typedef struct _MINISPY_DATA {
 
@@ -131,9 +130,9 @@ typedef struct _MINISPY_DATA {
 
 	LONGLONG WatchThread;
 
-	UNICODE_STRING WatchPaths[MAX_WATCHERS];
+	UNICODE_STRING WatchPath;
 
-    int WatchPathInUse;
+	__volatile LONG WatchPathInUse;
 
 } MINIFSWATCHER_DATA, *PMINIFSWATCHER_DATA;
 

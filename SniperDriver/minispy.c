@@ -20,7 +20,6 @@ Environment:
 #include <stdio.h>
 #include <limits.h>
 #include <Ntstrsafe.h>
-#include <stdlib.h>
 
 //
 //  Global variables
@@ -85,25 +84,6 @@ SpyDisconnect(
 //                      ROUTINES
 //---------------------------------------------------------------------------
 
-
-
-// UNICODE_STRING join_unicode_string_array(UNICODE_STRING_ARRAY array) {
-// 	UNICODE_STRING result;
-// 	RtlInitUnicodeString(&result, L""); // initialize the result string to an empty string
-//
-// 	for (int i = 0; i < array.count; i++) {
-// 		result.MaximumLength += array.strings[i].Length;
-// 	}
-//
-// 	result.Buffer = (wchar_t*)malloc(result.MaximumLength);
-//
-// 	for (int i = 0; i < array.count; i++) {
-// 		wcsncat(result.Buffer, array.strings[i].Buffer, array.strings[i].Length);
-// 	}
-//
-// 	return result;
-// }
-
 NTSTATUS
 DriverEntry (
     _In_ PDRIVER_OBJECT DriverObject,
@@ -147,11 +127,9 @@ Return Value:
         MiniFSWatcherData.RecordsAllocated = 0;
         MiniFSWatcherData.NameQueryMethod = DEFAULT_NAME_QUERY_METHOD;
 		MiniFSWatcherData.ClientPort = NULL;
-		MiniFSWatcherData.WatchPathInUse = 0;
-    	
-    	for (int i = 0; i < 5; i++) {
-    		RtlInitUnicodeString(&MiniFSWatcherData.WatchPaths[i], NULL);	
-    	}
+		MiniFSWatcherData.WatchPathInUse = FALSE;
+
+		RtlInitUnicodeString(&MiniFSWatcherData.WatchPath, NULL);
 
         MiniFSWatcherData.DriverObject = DriverObject;
 
@@ -209,14 +187,14 @@ Return Value:
                                     NULL,
                                     sd );
 
-        status =  FltCreateCommunicationPort( MiniFSWatcherData.Filter,
+        status = FltCreateCommunicationPort( MiniFSWatcherData.Filter,
                                              &MiniFSWatcherData.ServerPort,
                                              &oa,
                                              NULL,
                                              SpyConnect,
                                              SpyDisconnect,
                                              SpyMessage,
-                                             5 );
+                                             1 );
 
         FltFreeSecurityDescriptor( sd );
 
@@ -329,13 +307,7 @@ Return value
 	MiniFSWatcherData.ClientPort = NULL;
 	MiniFSWatcherData.WatchProcess = 0;
 	MiniFSWatcherData.WatchThread = 0;
-	// SpyUpdateWatchedPath(NULL);
-
-	MiniFSWatcherData.WatchPathInUse = 0;
-    	
-	for (int i = 0; i < MAX_WATCHERS; i++) {
-		RtlInitUnicodeString(&MiniFSWatcherData.WatchPaths[i], NULL);	
-	}
+	SpyUpdateWatchedPath(NULL);
 	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Client disconnected from MiniSpy\n");
 }
 
@@ -646,12 +618,11 @@ break;
 						status = STATUS_INVALID_PARAMETER;
 						break;
 					}
-					DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Watching paths xdd %wZ\n");
+
 					RtlInitUnicodeString(&dataString, (PCWSTR)((PCOMMAND_MESSAGE)InputBuffer)->Data);
 					if (SpyUpdateWatchedPath(&dataString))
 					{
-						DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Watching paths %wZ\n");
-						// join_unicode_string_array(MiniFSWatcherData.WatchPaths)
+						DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Watching path %wZ\n", &MiniFSWatcherData.WatchPath);
 						status = STATUS_SUCCESS;
 					}
 					else
@@ -726,7 +697,7 @@ Return Value:
 	PFLT_FILE_NAME_INFORMATION nameInfo = NULL;
 	PFLT_FILE_NAME_INFORMATION targetNameInfo = NULL;
 
-	if (MiniFSWatcherData.ClientPort == NULL || MiniFSWatcherData.WatchPaths->Length == 0)
+	if (MiniFSWatcherData.ClientPort == NULL || MiniFSWatcherData.WatchPath.Buffer == NULL)
 	{
 		return FLT_PREOP_SUCCESS_NO_CALLBACK;
 	}

@@ -1,5 +1,5 @@
 ;;;
-;;; MiniFSWatcher
+;;; Sniper
 ;;;
 ;;;
 ;;; Copyright (c) 2001, Microsoft Corporation
@@ -10,13 +10,13 @@ Signature   = "$Windows NT$"
 Class       = "ActivityMonitor"                         ;This is determined by the work this filter driver does
 ClassGuid   = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}    ;This value is determined by the Class
 Provider    = %ProviderString%
-DriverVer   = 06/16/2007,1.0.0.0
-CatalogFile = minifswatcher.cat
+DriverVer   = 06/25/2023,1.0.0.0
+CatalogFile = Sniper.cat
 
 
 [DestinationDirs]
 DefaultDestDir          = 12
-MiniFSWatcher.DriverFiles     = 12            ;%windir%\system32\drivers
+Sniper.DriverFiles     = 12            ;%windir%\system32\drivers
 
 ;;
 ;; Default install sections
@@ -24,17 +24,17 @@ MiniFSWatcher.DriverFiles     = 12            ;%windir%\system32\drivers
 
 [DefaultInstall]
 OptionDesc          = %ServiceDescription%
-CopyFiles           = MiniFSWatcher.DriverFiles
+CopyFiles           = Sniper.DriverFiles
 
 [DefaultInstall.Services]
-AddService          = %ServiceName%,,MiniFSWatcher.Service
+AddService          = %ServiceName%,,Sniper.Service
 
 ;;
 ;; Default uninstall sections
 ;;
 
 [DefaultUninstall]
-DelFiles   = MiniFSWatcher.DriverFiles
+DelFiles   = Sniper.DriverFiles
 
 [DefaultUninstall.Services]
 DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
@@ -43,7 +43,7 @@ DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
 ; Services Section
 ;
 
-[MiniFSWatcher.Service]
+[Sniper.Service]
 DisplayName      = %ServiceName%
 Description      = %ServiceDescription%
 ServiceBinary    = %12%\%DriverName%.sys        ;%windir%\system32\drivers\
@@ -52,13 +52,13 @@ ServiceType      = 2                            ;SERVICE_FILE_SYSTEM_DRIVER
 StartType        = 2                            ;SERVICE_AUTO_START
 ErrorControl     = 1                            ;SERVICE_ERROR_NORMAL
 LoadOrderGroup   = "FSFilter Activity Monitor"
-AddReg           = MiniFSWatcher.AddRegistry
+AddReg           = Sniper.AddRegistry
 
 ;
 ; Registry Modifications
 ;
 
-[MiniFSWatcher.AddRegistry]
+[Sniper.AddRegistry]
 HKR,,"SupportedFeatures",0x00010001,0x3
 HKR,"Instances","DefaultInstance",0x00000000,%DefaultInstance%
 HKR,"Instances\"%Instance.Name%,"Altitude",0x00000000,%Instance.Altitude%
@@ -68,11 +68,11 @@ HKR,"Instances\"%Instance.Name%,"Flags",0x00010001,%Instance.Flags%
 ; Copy Files
 ;
 
-[MiniFSWatcher.DriverFiles]
+[Sniper.DriverFiles]
 %DriverName%.sys
 
 [SourceDisksFiles]
-minifswatcher.sys = 1,,
+sniper.sys = 1,,
 
 [SourceDisksNames]
 1 = %DiskId1%,,,
@@ -83,13 +83,13 @@ minifswatcher.sys = 1,,
 
 [Strings]
 ProviderString          = "TODO-Set-Provider"
-ServiceDescription      = "MiniFSWatcher mini-filter driver"
-ServiceName             = "MiniFSWatcher"
-DriverName              = "minifswatcher"
-DiskId1                 = "MiniFSWatcher Device Installation Disk"
+ServiceDescription      = "Sniper mini-filter driver"
+ServiceName             = "Sniper"
+DriverName              = "sniper"
+DiskId1                 = "Sniper Device Installation Disk"
 
 ;Instances specific information.
-DefaultInstance         = "MiniFSWatcher File System Watcher"       
-Instance.Name          = "MiniFSWatcher File System Watcher"
+DefaultInstance         = "Sniper File System Watcher"       
+Instance.Name          = "Sniper File System Watcher"
 Instance.Altitude      = "385100"
 Instance.Flags         = 0x0          

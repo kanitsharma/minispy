@@ -12,7 +12,6 @@ namespace SniperTestApp
             var path = (args.Length > 0) ? args[0] : AppDomain.CurrentDomain.BaseDirectory;
 
             Console.WriteLine("Sniper FileSystemEventFilter Demo Application");
-            Console.WriteLine("======================================\n");
             Console.WriteLine("Listing events in \"" + path + "\"");
             Console.WriteLine("To watch a different path, run: " + AppDomain.CurrentDomain.FriendlyName + " <pattern>\n");
 

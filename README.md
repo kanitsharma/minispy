@@ -20,3 +20,7 @@ Please make sure to always compile and install the correct driver version (32/64
 To uninstall the driver, run
 
     RUNDLL32.EXE SETUPAPI.DLL,InstallHinfSection DefaultUninstall 132 ./sniper.inf
+
+## Usage
+
+Check SniperTestApp for API 

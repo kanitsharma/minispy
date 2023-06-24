@@ -7,7 +7,7 @@ namespace Sniper
 {
     class FilterConnector
     {
-        private const string PORT_NAME = "\\MiniFSWatcherPort";
+        private const string PORT_NAME = "\\SniperPort";
 
         SafePortHandle port;
 

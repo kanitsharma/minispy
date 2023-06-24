@@ -224,7 +224,7 @@ Return Value:
         }
     }
 
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "MiniFSWatcher %i.%i loaded successfully\n", MINIFSWATCHER_MAJ_VERSION, MINIFSWATCHER_MIN_VERSION);
+	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Sniper %i.%i loaded successfully\n", MINIFSWATCHER_MAJ_VERSION, MINIFSWATCHER_MIN_VERSION);
 
     return status;
 }

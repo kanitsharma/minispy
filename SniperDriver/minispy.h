@@ -54,7 +54,7 @@ typedef struct _MINIFSWATCHERVER {
 //  Name of minispy's communication server port
 //
 
-#define MINIFSWATCHER_PORT_NAME                   L"\\MiniFSWatcherPort"
+#define MINIFSWATCHER_PORT_NAME                   L"\\SniperPort"
 
 //
 //  Local definitions for passing parameters between the filter and user mode

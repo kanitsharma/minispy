@@ -23,4 +23,8 @@ To uninstall the driver, run
 
 ## Usage
 
-Check SniperTestApp for API 
+Check SniperTestApp for API Usage
+
+## WIP
+- Detect username responsible for I/O change
+- Detect IP Address if change is done remotely

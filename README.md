@@ -26,5 +26,7 @@ To uninstall the driver, run
 Check SniperTestApp for API Usage
 
 ## WIP
-- Detect username responsible for I/O change
-- Detect IP Address if change is done remotely
+- Detect username responsible for I/O change.
+- Detect IP Address if change is done remotely.
+- Add Support for monitoring multiple paths.
+- Add package to nuget

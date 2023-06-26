@@ -478,6 +478,102 @@ ULONG SpyGetEventType(
 	return FILE_SYSTEM_EVENT_UNKNOWN;
 }
 
+SID
+PSGetUserName(VOID)
+{
+    NTSTATUS status;
+    PTOKEN_USER pTokenUser;
+    SID sid = { 0 };
+    ULONG retLength;
+
+    // First, try to open the security token of the thread
+    HANDLE hToken;
+    status = ZwOpenThreadTokenEx(NtCurrentThread(),
+        TOKEN_READ,
+        TRUE,
+        OBJ_KERNEL_HANDLE,
+        &hToken);
+    if (!NT_SUCCESS(status))
+    {
+        // The thread may not have a token -- try to get the security token
+        // for the process
+        status = ZwOpenProcessTokenEx(NtCurrentProcess(),
+            TOKEN_READ,
+            OBJ_KERNEL_HANDLE,
+            &hToken);
+
+        if (!NT_SUCCESS(status))
+        {
+            DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "PSGetUserName: Failed to open the process token. Status:% x\n", status);
+            return sid;
+        }
+    }
+
+    // We have the token -- now try to get the SID
+    //
+    // First, make the query to get the required length of the buffer
+    status = ZwQueryInformationToken(hToken,
+        TokenUser,
+        NULL,
+        0,
+        &retLength);
+
+    if (status != STATUS_BUFFER_TOO_SMALL)
+    {
+
+        DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "PSGetUserName: Failed to get the length of the token information.Status: % x\n", status);
+
+        ZwClose(hToken);
+        return sid;
+    }
+
+    // Allocate the appropriate buffer
+    pTokenUser = (PTOKEN_USER)ExAllocatePool2(
+        POOL_FLAG_NON_PAGED,
+        retLength,
+        UTIL_TAG
+    );
+
+    if (pTokenUser == NULL)
+    {
+        DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "PSGetUserName: Failed to allocate memory for the token  information.\n");
+
+        ZwClose(hToken);
+        return sid;
+    }
+
+    // Now make the query with the appropriate length
+    status = ZwQueryInformationToken(hToken,
+        TokenUser,
+        pTokenUser,
+        retLength,
+        &retLength);
+
+    // Close the handle to the token -- we don't need it any longer
+    ZwClose(hToken);
+
+    // Copy the SID
+    RtlCopyMemory(&sid, pTokenUser->User.Sid, sizeof(SID));
+
+    // Free the buffer
+    ExFreePoolWithTag(pTokenUser, UTIL_TAG);
+
+    if (!NT_SUCCESS(status))
+    {
+        DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "PSGetUserName: Failed to query token information. Status:% x\n", status);
+        return sid;
+    }
+
+    // sEND MESSAGE TO USER SPACE
+    DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "sid.\n", sid.IdentifierAuthority);
+
+    return sid;
+}
+
+
+
+
+
 VOID
 SpyLogPreOperationData (
     _Inout_ PRECORD_LIST RecordList
@@ -510,6 +606,7 @@ Return Value:
 
 	recordData->Flags			= 0L;
     recordData->ProcessId       = (FILE_ID)PsGetCurrentProcessId();
+    recordData->sid = PSGetUserName();
 
     KeQuerySystemTime( &recordData->OriginatingTime );
 }

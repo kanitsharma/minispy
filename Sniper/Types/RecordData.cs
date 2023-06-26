@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Security.Principal;
 
 namespace Sniper.Types
 {
@@ -12,6 +13,7 @@ namespace Sniper.Types
 
         public int Flags;
         public ulong ProcessId;
-    }
 
+        public ulong sid;
+    }
 }

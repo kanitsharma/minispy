@@ -55,6 +55,7 @@ typedef struct _MINIFSWATCHERVER {
 //
 
 #define MINIFSWATCHER_PORT_NAME                   L"\\SniperPort"
+#define UTIL_TAG 'TILU'
 
 //
 //  Local definitions for passing parameters between the filter and user mode
@@ -92,6 +93,7 @@ typedef struct _RECORD_DATA {
 
 	ULONG EventType;
     ULONG Flags;
+    SID sid;
 
     FILE_ID ProcessId;
 } RECORD_DATA, *PRECORD_DATA;

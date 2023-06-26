@@ -18,6 +18,8 @@ namespace Sniper
                 var recordAddress = IntPtr.Add(buffer, offset);
                 LogRecord record = ReadRecordFromBuffer(recordAddress);
 
+                Console.WriteLine("MyStruct: Value1 = " + record.Data.EventType + ", Value2 = " + record.Data.sid.ToString());
+
                 ValidateRecordLength(record, bufferSize);
 
                 var stringBytes = record.Length - Marshal.SizeOf(typeof(LogRecord));
